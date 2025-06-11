@@ -9,6 +9,8 @@ import os
 resources = ['stopwords', 'punkt', 'wordnet', 'omw-1.4']
 
 def check_and_download(resource):
+    """Verifica e baixa recursos necessários do NLTK."""
+    
     try:
         nltk.data.find(f'corpora/{resource}')
     except LookupError:
@@ -20,6 +22,8 @@ for resource in resources:
 
 # Função de limpeza de texto
 def clean_text(text):
+    """Limpa e padroniza o texto, removendo caracteres especiais e stopwords."""
+
     if not isinstance(text, str):
         return ""
     text = text.lower()
@@ -43,8 +47,10 @@ output_path = "data/processed"
 os.makedirs(output_path, exist_ok=True)
 
 def run_preprocessing():
+    """Executa o pré-processamento de todos os arquivos de dados."""
+
     for file_name, mapping in column_mappings.items():
-        print(f"\n📄 Processando: {file_name}")
+        print(f"\nProcessando: {file_name}")
         file_path = os.path.join(base_path, file_name)
 
         try:
@@ -72,7 +78,7 @@ def run_preprocessing():
             # Salvar
             out_file = file_name.replace(".csv", "_processed.csv")
             df.to_csv(os.path.join(output_path, out_file), index=False)
-            print(f"✅ Salvo em: {output_path}/{out_file}")
+            print(f"Salvo em: {output_path}/{out_file}")
 
         except Exception as e:
-            print(f"❌ Erro ao processar {file_name}: {e}")
+            print(f"Erro ao processar {file_name}: {e}")

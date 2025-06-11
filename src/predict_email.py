@@ -7,6 +7,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack, csr_matrix
 
 def clean_text(text):
+    """Limpa e padroniza o texto, removendo caracteres especiais e stopwords."""
+    
     if not isinstance(text, str):
         return ""
     text = text.lower()
@@ -16,12 +18,18 @@ def clean_text(text):
     return " ".join(tokens)
 
 def extract_domain(sender):
+    """Extrai o domínio do remetente."""
+    
     return sender.split("@")[-1] if sender and "@" in sender else ""
 
 def count_urls(urls):
+    """Conta o número de URLs no texto."""
+    
     return len(str(urls).split()) if urls else 0
 
 def run_prediction():
+    """Executa a predição de um e-mail de exemplo."""
+    
     vectorizer = joblib.load("models/tfidf_vectorizer.pkl")
     encoder = joblib.load("models/onehot_encoder.pkl")
     model = joblib.load("models/spam_classifier.pkl")
@@ -46,5 +54,3 @@ def run_prediction():
 
     pred = model.predict(X)[0]
     print(f"\U0001f4e8 Previsão para o e-mail: {pred}")
-
-run_prediction()
