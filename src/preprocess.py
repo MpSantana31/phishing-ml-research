@@ -50,6 +50,11 @@ def run_preprocessing():
     """Executa o pré-processamento de todos os arquivos de dados."""
 
     for file_name, mapping in column_mappings.items():
+        out_file = file_name.replace(".csv", "_processed.csv")
+        processed_path = os.path.join(output_path, out_file)
+        if os.path.exists(processed_path):
+            print(f"Já processado: {processed_path} (pulando)")
+            continue
         print(f"\nProcessando: {file_name}")
         file_path = os.path.join(base_path, file_name)
 
@@ -76,9 +81,8 @@ def run_preprocessing():
             df["cleaned_text"] = df["text"].apply(clean_text)
 
             # Salvar
-            out_file = file_name.replace(".csv", "_processed.csv")
-            df.to_csv(os.path.join(output_path, out_file), index=False)
-            print(f"Salvo em: {output_path}/{out_file}")
+            df.to_csv(processed_path, index=False)
+            print(f"Salvo em: {processed_path}")
 
         except Exception as e:
             print(f"Erro ao processar {file_name}: {e}")
