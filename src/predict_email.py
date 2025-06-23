@@ -1,9 +1,7 @@
 import re
 import joblib
-import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack, csr_matrix
 
 def clean_text(text):
@@ -53,4 +51,4 @@ def run_prediction():
     X = hstack([text_vector, domain_vector, numeric_vector])
 
     pred = model.predict(X)[0]
-    print(f"\U0001f4e8 Previsão para o e-mail: {pred}")
+    print(f"Previsão para o e-mail: {pred}")
