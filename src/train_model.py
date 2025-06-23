@@ -9,6 +9,9 @@ from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassif
 from sklearn.metrics import classification_report
 from scipy.sparse import hstack, csr_matrix
 import joblib
+import json
+import os
+from datetime import datetime
 
 def ensure_models_directory():
     """Garante que a pasta de modelos exista."""
@@ -19,6 +22,27 @@ def ensure_models_directory():
         print(f"Pasta '{models_path}' criada.")
     else:
         print(f"Pasta '{models_path}' já existe.")
+
+def save_results(model_name, metrics, params=None):
+    """Salva os resultados do modelo em formato JSON. """
+    results_dir = os.path.join('data', 'processed', 'results')
+    os.makedirs(results_dir, exist_ok=True)
+    
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f"{model_name}_{timestamp}.json"
+    filepath = os.path.join(results_dir, filename)
+    
+    data = {
+        'model': model_name,
+        'timestamp': timestamp,
+        'metrics': metrics,
+        'params': params if params else {}
+    }
+    
+    with open(filepath, 'w') as f:
+        json.dump(data, f, indent=4)
+    
+    return filepath
 
 def run_training():
     """Executa o treinamento e comparação de múltiplos modelos."""
@@ -142,6 +166,15 @@ def run_training():
         print(f"- Test Accuracy: {results[name]['test_accuracy']:.4f}")
         print(f"- Test F1: {results[name]['test_f1']:.4f}")
         print(f"- CV Mean F1: {results[name]['cv_mean_f1']:.4f} (±{results[name]['cv_std_f1']:.4f})")
+        
+        # Salvar resultados
+        metrics = {
+            "test_accuracy": results[name]['test_accuracy'],
+            "test_f1": results[name]['test_f1'],
+            "cv_mean_f1": results[name]['cv_mean_f1'],
+            "cv_std_f1": results[name]['cv_std_f1']
+        }
+        save_results(name, metrics)
 
     # Selecionar melhor modelo baseado no F1
     best_model_name = max(results.items(), key=lambda x: x[1]['test_f1'])[0]

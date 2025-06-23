@@ -5,6 +5,13 @@ Este projeto implementa um pipeline completo de detecção de e-mails de phishin
 ## Objetivo
 Detectar automaticamente e-mails de phishing a partir de diferentes bases públicas, utilizando pré-processamento de texto, extração de features e treinamento de modelos de classificação.
 
+## Modelos Implementados
+
+- **SGDClassifier**: Versão rápida de regressão logística
+- **HistGradientBoosting**: Alternativa rápida ao XGBoost
+- **Naive Bayes**: Mantido com parâmetros otimizados para velocidade
+- **Random Forest**: Mantido com parâmetros otimizados para velocidade
+
 ## Como funciona
 O pipeline executa as seguintes etapas, todas automatizadas pelo arquivo `src/main.py`:
 
@@ -48,6 +55,33 @@ O pipeline irá baixar (se necessário) e preparar os dados, treinar o modelo e 
 - Bases públicas de e-mails de phishing e spam.
 - Bibliotecas: pandas, scikit-learn, nltk, joblib, scipy.
 
----
+## Otimizações
 
-Qualquer dúvida ou sugestão, fique à vontade para abrir uma issue ou entrar em contato!
+- Substituição dos modelos lentos (SVM e XGBoost) por alternativas mais rápidas
+- Parâmetros ajustados para melhor equilíbrio entre performance e velocidade
+
+## Resultados
+
+### Métricas dos Modelos (última execução)
+
+| Modelo | Acurácia (Teste) | F1-Score (Teste) | F1-Score (CV Mean ± Std) |
+|--------|------------------|------------------|--------------------------|
+| Naive Bayes | 0.9725 | 0.9725 | 0.9682 ± 0.0059 |
+| Logistic Regression | 0.9807 | 0.9807 | 0.9759 ± 0.0040 |
+| Random Forest | 0.8702 | 0.8686 | 0.8586 ± 0.0164 |
+| SGDClassifier | 0.9580 | 0.9580 | 0.9532 ± 0.0053 |
+| HistGradientBoosting | 0.9326 | 0.9326 | 0.9296 ± 0.0051 |
+
+**Melhor modelo**: Logistic Regression (F1=0.9807)
+
+### Visualização de Resultados
+
+O projeto agora inclui:
+1. Salvamento automático de métricas em `data/processed/results/`
+2. Script `generate_plots.py` para gerar gráficos comparativos
+3. Gráficos salvos em `data/processed/plots/`
+
+Para gerar os gráficos:
+```bash
+python src/generate_plots.py
+```
